@@ -17,7 +17,7 @@ driver = ''
 driver = createwebdriver(driver, driver_type="chrome")  # Chrome driver creation
 ```
 
-### Chrome WebDriver Creation
+### Edge WebDriver Creation
 To create a Edge WebDriver:
 
 ```python
