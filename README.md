@@ -1,6 +1,10 @@
 # AIOdriver
 A all in one driver system with support for both chrome and edge with auto update funcationality
 
+## Installation
+
+Run this command to install the package `pip install git + https://github.com/abhishake99/AIOdriver.git`
+
 ## Driver Creation Methods
 
 You can create WebDriver instances for different browsers using the `createwebdriver` function from the `AIOdriver.functions` module.
