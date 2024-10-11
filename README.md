@@ -3,7 +3,7 @@ A all in one driver system with support for both chrome and edge with auto updat
 
 ## Installation
 
-Run this command to install the package `pip install git + https://github.com/abhishake99/AIOdriver.git`
+Run this command to install the package `pip install git+https://github.com/abhishake99/AIOdriver.git`
 
 ## Driver Creation Methods
 
