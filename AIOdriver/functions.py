@@ -6,6 +6,8 @@ import re
 import sys
 import urllib
 
+
+
 def download_chromedriver():
 
     chrome_driver_url = "https://storage.googleapis.com/chrome-for-testing-public/129.0.6668.58/win64/chrome-win64.zip"
@@ -78,6 +80,7 @@ def download_and_extract_edgedriver(version, extract_to):
         print(f"Edge WebDriver extracted to: {extract_to}")
     except requests.exceptions.RequestException as e:
         print(f"Error downloading Edge WebDriver: {e}")
+
 
 def createwebdriver(driver,crawler_type='osa',driver_type="chrome"):
 
@@ -168,6 +171,15 @@ def createwebdriver(driver,crawler_type='osa',driver_type="chrome"):
             driver = webdriver.Chrome(seleniumwire_options=options,service=service,options=chrome_options)
             print("successfully created wire instance")
             return driver
+        
+        elif driver_type=="uc":
+            import undetected_chromedriver as uc
+            options = uc.ChromeOptions()
+            prefs = {"profile.default_content_settings.geolocation": 2}
+            options.add_experimental_option("prefs", prefs)
+            options.add_argument("--deny-permission-prompts")
+            driver = uc.Chrome(options=options)
+            return driver
 
     else:    
         if driver_type=="chrome":
@@ -247,7 +259,17 @@ def createwebdriver(driver,crawler_type='osa',driver_type="chrome"):
             except:
                 driver=webdriver.Edge(executable_path=edge_driver_path)
             print("successfully created Edge instance")
-            return driver 
+            return driver
+        
+        elif driver_type=="uc":
+            import undetected_chromedriver as uc
+            options = uc.ChromeOptions()
+            prefs = {"profile.default_content_settings.geolocation": 2}
+            options.add_experimental_option("prefs", prefs)
+            options.add_argument("--deny-permission-prompts")
+            driver = uc.Chrome(options=options)
+            return driver
+
 
             
 
