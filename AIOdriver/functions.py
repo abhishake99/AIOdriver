@@ -88,11 +88,11 @@ def createwebdriver(driver,crawler_type='osa',driver_type="chrome"):
 
         if driver_type=="edge":
             edge_version = get_edge_version() #Downloading the Edge driver 
-            temp_version=edge_version.split('.')[:3]
+            temp_version='.'.join(edge_version.split('.')[:3])
             try:
                 with open(r'C:\new_edge\current_version.txt') as file:
                     current_ver=str(file.read().strip())
-                    current_ver=current_ver.split('.')[:3]
+                    current_ver='.'.join(current_ver.split('.')[:3])
             except:
                 current_ver=''
             print("Current Edge Version : ",current_ver)
@@ -227,11 +227,11 @@ def createwebdriver(driver,crawler_type='osa',driver_type="chrome"):
         
         elif driver_type=='edge':
             edge_version = get_edge_version() #Downloading the Edge driver 
-            temp_version=edge_version.split('.')[:3]
+            temp_version='.'.join(edge_version.split('.')[:3])
             try:
                 with open(r'C:\new_edge\current_version.txt') as file:
                     current_ver=str(file.read().strip())
-                    current_ver=current_ver.split('.')[:3]
+                    current_ver='.'.join(current_ver.split('.')[:3])
             except:
                 current_ver=''
             print("Current Edge Version : ",current_ver)
