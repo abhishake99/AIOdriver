@@ -5,14 +5,87 @@ import subprocess
 import re
 import sys
 import urllib
+import json
+import platform
+import shutil
+
+def get_chrome_version():
+    try:
+        # Check Chrome version based on OS
+        if platform.system() == "Windows":
+            output = subprocess.check_output(r'reg query "HKEY_CURRENT_USER\Software\Google\Chrome\BLBeacon" /v version', shell=True).decode()
+            version = re.search(r"([\d.]+)", output).group(1)
+        elif platform.system() == "Darwin":
+            output = subprocess.check_output("/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --version", shell=True).decode()
+            version = re.search(r"([\d.]+)", output).group(1)
+        else:  # Linux
+            output = subprocess.check_output("google-chrome --version", shell=True).decode()
+            version = re.search(r"([\d.]+)", output).group(1)
+        return version
+    except Exception as e:
+        print("Could not get Chrome version:", e)
+        return None
+    
+def get_chromedriver_url(chrome_version):
+    all_matching_versions=[]
+    chrome_version='.'.join(chrome_version.split('.')[0:3])
+    response=requests.get('https://googlechromelabs.github.io/chrome-for-testing/known-good-versions-with-downloads.json')
+    try:
+        data = json.loads(response.text)
+        for ver in data['versions']:
+            if chrome_version in ver['version']:
+                all_matching_versions.append({ver['version']:ver['downloads']['chromedriver'][-1]['url']})
+        print(list(all_matching_versions[-1].values())[0])
+        return list(all_matching_versions[-1].values())[0]
+    except:
+        return ''
+
+def download_chromedriver(url):
+    response = requests.get(url)
+    if response.status_code == 200:
+        zip_path = "chromedriver.zip"
+        with open(zip_path, "wb") as file:
+            file.write(response.content)
+        
+        with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+            zip_ref.extractall()
+        
+        os.remove(zip_path)
+        print("ChromeDriver downloaded and extracted successfully.")
+    else:
+        print("Failed to download ChromeDriver.")
+
+def copy_chromedriver_to_c(source_folder):
+    source_path = os.path.join(source_folder, "chromedriver.exe")
+    destination_path = r"C:\chromedriver.exe"
+
+    if os.path.exists(source_path):
+        shutil.copy(source_path, destination_path)
+        print(f"chromedriver.exe has been copied to {destination_path}")
+    else:
+        print(f"chromedriver.exe not found in {source_folder}")
 
 
+def c_driver_chromedriver():
+    chrome_version = get_chrome_version()
+    if chrome_version:
+        print("Detected Chrome version:", chrome_version)
+        chromedriver_url = get_chromedriver_url(chrome_version)
+        if chromedriver_url:
+            print("Downloading ChromeDriver...")
+            download_chromedriver(chromedriver_url)
+            copy_chromedriver_to_c(os.getcwd())
+        else:
+            print("Could not determine the ChromeDriver download URL.")
+    else:
+        print("Chrome is not installed or could not be detected.")
 
-def download_chromedriver():
 
-    chrome_driver_url = "https://storage.googleapis.com/chrome-for-testing-public/129.0.6668.58/win64/chrome-win64.zip"
-    chrome_driver="https://storage.googleapis.com/chrome-for-testing-public/129.0.6668.58/win64/chromedriver-win64.zip"
-    downlodable_content={'chromdriver':chrome_driver,'chromedriver-win64':chrome_driver_url}
+def download_chromedriver_testing_new():
+
+    chrome_exe = "https://storage.googleapis.com/chrome-for-testing-public/130.0.6723.116/win64/chrome-win64.zip"
+    chrome_driver="https://storage.googleapis.com/chrome-for-testing-public/130.0.6723.116/win64/chromedriver-win64.zip"
+    downlodable_content={'chromdriver':chrome_driver,'chromedriver-win64':chrome_exe}
 
     for content in downlodable_content:
 
@@ -30,6 +103,27 @@ def download_chromedriver():
 
         print(f"ChromeDriver extracted to: {extract_path}")
 
+def download_chromedriver_testing_old():
+
+    chrome_exe_url = "https://storage.googleapis.com/chrome-for-testing-public/121.0.6100.0/win64/chrome-win64.zip"
+    chromedriver_url = "https://storage.googleapis.com/chrome-for-testing-public/121.0.6100.0/win64/chromedriver-win64.zip"
+    downloadable_content = {'chrome_exe': chrome_exe_url, 'chromedriver': chromedriver_url}
+    paths = {
+        'chrome_exe': r'C:\\',
+        'chromedriver': r'C:\olddriver'
+    }
+
+    for content, url in downloadable_content.items():
+        zip_path = f'{paths[content]}.zip'
+        extract_path = paths[content]
+
+        os.makedirs(extract_path, exist_ok=True)
+        urllib.request.urlretrieve(url, zip_path)
+        with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+            zip_ref.extractall(extract_path)
+
+        os.remove(zip_path)
+        print(f"{content} extracted to: {extract_path}")
 
 def get_edge_version():
     try:
@@ -132,7 +226,7 @@ def createwebdriver(driver,crawler_type='osa',driver_type="chrome"):
             chromedriver_win64_path=r'C:\new_chrome\extract\chromedriver-win64'
             chrome_win64_path=r'C:\new_chrome\extract\chrome-win64'
             if not os.path.exists(chrome_win64_path) and not os.path.exists(chromedriver_win64_path):
-                download_chromedriver()
+                download_chromedriver_testing_new()
             else:
                 print("Setup already present")
             def install(package):
@@ -202,7 +296,6 @@ def createwebdriver(driver,crawler_type='osa',driver_type="chrome"):
                 driver = webdriver.Chrome(service=service,options=chrome_options)
             except:
                 try:
-
                     print('IN EXCEPTION')
                     service = Service(r"C:\olddriver\chromedriver.exe")
                     driver = webdriver.Chrome(service=service,options=chrome_options)
@@ -211,9 +304,9 @@ def createwebdriver(driver,crawler_type='osa',driver_type="chrome"):
                     chrome_win64_path=r'C:\new_chrome\extract\chrome-win64'
 
                     if not os.path.exists(chrome_win64_path) and not os.path.exists(chromedriver_win64_path):
-                        download_chromedriver()
+                        download_chromedriver_testing_new()
                     else:
-                        print("Setup already present")
+                        print("New Testing Chrome Setup already present")
 
                     chrome_options.binary_location="C:\\new_chrome\\extract\\chrome-win64\\chrome.exe"
                     service = Service(r"C:\new_chrome\extract\chromedriver-win64\chromedriver.exe")
@@ -273,7 +366,17 @@ def createwebdriver(driver,crawler_type='osa',driver_type="chrome"):
             options.add_argument("--deny-permission-prompts")
             driver = uc.Chrome(options=options)
             return driver
-
+        
+        elif driver_type=='chrome_old':
+            chromedriver_win64_path=r'C:\oldriver'
+            chrome_win64_path=r'C:\chrome-win64'
+            if not os.path.exists(chrome_win64_path) and not os.path.exists(chromedriver_win64_path):
+                download_chromedriver_testing_old()
+            else:
+                print("Old Testing Chrome Setup already present")
+           
+        elif driver_type=='cdrive':
+            c_driver_chromedriver()
 
             
 
