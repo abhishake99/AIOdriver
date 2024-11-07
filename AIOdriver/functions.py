@@ -72,17 +72,19 @@ def c_driver_chromedriver():
     if chrome_version:
         print("Detected Chrome version:", chrome_version)
         chromedriver_url,fetched_chrome_version = get_chromedriver_url(chrome_version)
-        fetched_chrome_version='.'.join(fetched_chrome_version.split('.')[0:3])
-        chrome_version='.'.join(chrome_version.split('.')[0:3])
-        if fetched_chrome_version!=chrome_version:
-            if chromedriver_url:
-                print("Downloading ChromeDriver...")
-                download_chromedriver(chromedriver_url)
-                copy_chromedriver_to_c(os.path.join(os.getcwd(),'chromedriver-win64'))
-            else:
-                print("Could not determine the ChromeDriver download URL.")
+        # fetched_chrome_version='.'.join(fetched_chrome_version.split('.')[0:3])
+        # chrome_version='.'.join(chrome_version.split('.')[0:3])
+        # if fetched_chrome_version!=chrome_version:
+        if chromedriver_url:
+            print("Downloading ChromeDriver...")
+            download_chromedriver(chromedriver_url)
+            copy_chromedriver_to_c(os.path.join(os.getcwd(),'chromedriver-win64'))
         else:
-            print("Local chrome driver is of latest version")
+            print("Could not determine the ChromeDriver download URL.")
+        # else:
+        #     if not os.path.exists(r"C:\latest_chrome_driver"):
+        #         os.makedirs(r"C:\latest_chrome_driver")
+        #     print("Local chrome driver is of latest version")
     else:
         print("Chrome is not installed or could not be detected.")
 
@@ -292,30 +294,25 @@ def createwebdriver(driver,crawler_type='osa',driver_type="chrome"):
                 driver.quit()
             except:
                 pass
-            
             print('in createwebdriver')
             chrome_options = Options()
-            chrome_options.binary_location="C:\old_chrome\extract\chrome-win64"
-
             try:
+                print('IN EXCEPTION')
+                chrome_options.binary_location="C:\old_chrome\extract\chrome-win64\chrome.exe"
+                service = Service(r"C:\old_chrome\extract\chromedriver-win64\chromedriver.exe")
                 driver = webdriver.Chrome(service=service,options=chrome_options)
-            except:
-                try:
-                    print('IN EXCEPTION')
-                    service = Service(r"C:\old_chrome\extract\chromedriver-win64\chromedriver.exe")
-                    driver = webdriver.Chrome(service=service,options=chrome_options)
-                except:
-                    chromedriver_win64_path=r'C:\new_chrome\extract\chromedriver-win64'
-                    chrome_win64_path=r'C:\new_chrome\extract\chrome-win64'
+            except :
+                chromedriver_win64_path=r'C:\new_chrome\extract\chromedriver-win64'
+                chrome_win64_path=r'C:\new_chrome\extract\chrome-win64'
 
-                    if not os.path.exists(chrome_win64_path) and not os.path.exists(chromedriver_win64_path):
-                        download_chromedriver_testing_new()
-                    else:
-                        print("New Testing Chrome Setup already present")
+                if not os.path.exists(chrome_win64_path) and not os.path.exists(chromedriver_win64_path):
+                    download_chromedriver_testing_new()
+                else:
+                    print("New Testing Chrome Setup already present")
 
-                    chrome_options.binary_location="C:\\new_chrome\\extract\\chrome-win64\\chrome.exe"
-                    service = Service(r"C:\new_chrome\extract\chromedriver-win64\chromedriver.exe")
-                    driver = webdriver.Chrome(service=service,options=chrome_options)
+                chrome_options.binary_location="C:\\new_chrome\\extract\\chrome-win64\\chrome.exe"
+                service = Service(r"C:\new_chrome\extract\chromedriver-win64\chromedriver.exe")
+                driver = webdriver.Chrome(service=service,options=chrome_options)
 
             driver.maximize_window()
             driver.get('chrome://settings/')
@@ -374,7 +371,7 @@ def createwebdriver(driver,crawler_type='osa',driver_type="chrome"):
         
         elif driver_type=='chrome_old':
             chromedriver_win64_path=r'C:\old_chrome'
-            if not os.path.exists(chrome_win64_path):
+            if not os.path.exists(chromedriver_win64_path):
                 download_chromedriver_testing_old()
             else:
                 print("Old Testing Chrome Setup already present")   
