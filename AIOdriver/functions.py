@@ -195,48 +195,7 @@ def createwebdriver(driver,crawler_type='osa',driver_type="chrome"):
 
     if crawler_type=='bh' or crawler_type=='rr':
 
-        if driver_type=="edge":
-            edge_version = get_edge_version() #Downloading the Edge driver 
-            temp_version='.'.join(edge_version.split('.')[:3])
-            try:
-                with open(r'C:\new_edge\current_version.txt') as file:
-                    current_ver=str(file.read().strip())
-                    current_ver='.'.join(current_ver.split('.')[:3])
-            except:
-                current_ver=''
-            print("Current Edge Version : ",current_ver)
-            if temp_version!=current_ver:
-                print(f"Detected Edge version: {edge_version}")
-                edgedriver_version = get_edgedriver_version(edge_version)
-                if edgedriver_version:
-                    extract_path = r"C:\new_edge\extract"  
-                    if not os.path.exists(extract_path):
-                        os.makedirs(extract_path)
-                    print(f"Downloading Edge WebDriver version: {edgedriver_version}")
-                    try:
-                        download_and_extract_edgedriver(edge_version, extract_path)
-                    except:
-                        download_and_extract_edgedriver(edgedriver_version, extract_path)
-                    with open(r'C:\new_edge\current_version.txt','w') as file:
-                        file.write(edgedriver_version)
-                else:
-                    print("Failed to get Edge WebDriver version.")
-            else:
-                print("Already on latest version")
-
-            from selenium import webdriver
-            from selenium.webdriver.chrome.service import Service
-            from selenium.webdriver.chrome.options import Options
-            edge_driver_path=r"C:\new_edge\extract\msedgedriver.exe"
-            service = Service(edge_driver_path)
-            try:
-                driver = webdriver.Edge(service=service)
-            except:
-                driver=webdriver.Edge(executable_path=edge_driver_path)
-            print("successfully created Edge instance")
-            return driver 
-          
-        elif driver_type=="chrome":
+        if driver_type=="chrome":
 
             chromedriver_win64_path=r'C:\new_chrome\extract\chromedriver-win64'
             chrome_win64_path=r'C:\new_chrome\extract\chrome-win64'
@@ -282,15 +241,6 @@ def createwebdriver(driver,crawler_type='osa',driver_type="chrome"):
             driver = webdriver.Chrome(seleniumwire_options=options,service=service,options=chrome_options)
             print("successfully created wire instance")
             return driver
-        
-        elif driver_type=="uc":
-            import undetected_chromedriver as uc
-            options = uc.ChromeOptions()
-            prefs = {"profile.default_content_settings.geolocation": 2}
-            options.add_experimental_option("prefs", prefs)
-            options.add_argument("--deny-permission-prompts")
-            driver = uc.Chrome(options=options)
-            return driver
 
     else:    
         if driver_type=="chrome":
@@ -310,17 +260,23 @@ def createwebdriver(driver,crawler_type='osa',driver_type="chrome"):
                 service = Service(r"C:\old_chrome\extract\chromedriver-win64\chromedriver.exe")
                 driver = webdriver.Chrome(service=service,options=chrome_options)
             except :
-                chromedriver_win64_path=r'C:\new_chrome\extract\chromedriver-win64'
-                chrome_win64_path=r'C:\new_chrome\extract\chrome-win64'
+                try:
+                    print('IN EXCEPTION 2')
+                    chrome_options.binary_location="C:\chrome-win64\chrome.exe"
+                    service = Service(r"C:\olddriver\chromedriver.exe")
+                    driver = webdriver.Chrome(service=service,options=chrome_options)
+                except:
+                    chromedriver_win64_path=r'C:\new_chrome\extract\chromedriver-win64'
+                    chrome_win64_path=r'C:\new_chrome\extract\chrome-win64'
 
-                if not os.path.exists(chrome_win64_path) and not os.path.exists(chromedriver_win64_path):
-                    download_chromedriver_testing_new()
-                else:
-                    print("New Testing Chrome Setup already present")
+                    if not os.path.exists(chrome_win64_path) and not os.path.exists(chromedriver_win64_path):
+                        download_chromedriver_testing_new()
+                    else:
+                        print("New Testing Chrome Setup already present")
 
-                chrome_options.binary_location="C:\\new_chrome\\extract\\chrome-win64\\chrome.exe"
-                service = Service(r"C:\new_chrome\extract\chromedriver-win64\chromedriver.exe")
-                driver = webdriver.Chrome(service=service,options=chrome_options)
+                    chrome_options.binary_location="C:\\new_chrome\\extract\\chrome-win64\\chrome.exe"
+                    service = Service(r"C:\new_chrome\extract\chromedriver-win64\chromedriver.exe")
+                    driver = webdriver.Chrome(service=service,options=chrome_options)
 
             driver.maximize_window()
             driver.get('chrome://settings/')
