@@ -75,10 +75,14 @@ def c_driver_chromedriver():
         # fetched_chrome_version='.'.join(fetched_chrome_version.split('.')[0:3])
         # chrome_version='.'.join(chrome_version.split('.')[0:3])
         # if fetched_chrome_version!=chrome_version:
-        with open(r'C:\latest_chrome_driver\current_version.txt') as f:
-            current_version = str(f.read().strip())
+        try:
+            with open(r'C:\latest_chrome_driver\current_version.txt') as f:
+                current_version = str(f.read().strip())
             current_version='.'.join(current_version.split('.')[0:3])
-        if current_version!=fetched_chrome_version:
+        except:
+            current_version = ''
+        print(current_version,'.'.join(fetched_chrome_version.split('.')[0:3]))
+        if current_version!='.'.join(fetched_chrome_version.split('.')[0:3]):
             if chromedriver_url:
                 print("Downloading ChromeDriver...")
                 download_chromedriver(chromedriver_url)
