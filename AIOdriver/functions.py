@@ -75,16 +75,20 @@ def c_driver_chromedriver():
         # fetched_chrome_version='.'.join(fetched_chrome_version.split('.')[0:3])
         # chrome_version='.'.join(chrome_version.split('.')[0:3])
         # if fetched_chrome_version!=chrome_version:
-        if chromedriver_url:
-            print("Downloading ChromeDriver...")
-            download_chromedriver(chromedriver_url)
-            copy_chromedriver_to_c(os.path.join(os.getcwd(),'chromedriver-win64'))
+        with open(r'C:\latest_chrome_driver\current_version.txt') as f:
+            current_version = str(f.read().strip())
+            current_version='.'.join(current_version.split('.')[0:3])
+        if current_version!=fetched_chrome_version:
+            if chromedriver_url:
+                print("Downloading ChromeDriver...")
+                download_chromedriver(chromedriver_url)
+                copy_chromedriver_to_c(os.path.join(os.getcwd(),'chromedriver-win64'))
+                with open(r'C:\latest_chrome_driver\current_version.txt','w') as file:
+                    file.write(fetched_chrome_version)
+            else:
+                print("Could not determine the ChromeDriver download URL.")
         else:
-            print("Could not determine the ChromeDriver download URL.")
-        # else:
-        #     if not os.path.exists(r"C:\latest_chrome_driver"):
-        #         os.makedirs(r"C:\latest_chrome_driver")
-        #     print("Local chrome driver is of latest version")
+            print("Local chrome driver is of latest version")
     else:
         print("Chrome is not installed or could not be detected.")
 
