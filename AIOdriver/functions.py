@@ -254,6 +254,7 @@ def createwebdriver(driver,crawler_type='osa',driver_type="chrome"):
                 pass
             print('in createwebdriver')
             chrome_options = Options()
+            chrome_options.add_argument("--start-maximized")
             try:
                 print('IN EXCEPTION')
                 chrome_options.binary_location="C:\old_chrome\extract\chrome-win64\chrome.exe"
@@ -278,7 +279,7 @@ def createwebdriver(driver,crawler_type='osa',driver_type="chrome"):
                     service = Service(r"C:\new_chrome\extract\chromedriver-win64\chromedriver.exe")
                     driver = webdriver.Chrome(service=service,options=chrome_options)
 
-            driver.maximize_window()
+            # driver.maximize_window()
             driver.get('chrome://settings/')
             driver.execute_script('chrome.settingsPrivate.setDefaultZoom(0.7);')
 
@@ -353,4 +354,3 @@ def createwebdriver(driver,crawler_type='osa',driver_type="chrome"):
             return driver
 
                     
-

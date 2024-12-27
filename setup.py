@@ -2,7 +2,7 @@ import setuptools
 
 setuptools.setup(
     name='AIOdriver',
-    version='0.1.0',
+    version='0.1.1',
     author='Abhishek Ramawat',
     author_email='ramawatabhishek22@gmail.com',
     description='All in one driver',
