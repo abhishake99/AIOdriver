@@ -6,7 +6,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name='AIOdriver',
-    version='0.1.2',
+    version='0.1.3',
     author='Abhishek Ramawat',
     author_email='ramawatabhishek22@gmail.com',
     description='All in one driver',

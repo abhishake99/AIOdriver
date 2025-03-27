@@ -190,6 +190,42 @@ def download_and_extract_edgedriver(version, extract_to):
     except requests.exceptions.RequestException as e:
         print(f"Error downloading Edge WebDriver: {e}")
 
+def driver_initialisation_profile(username='Administrator',profile_directory='Default'):
+    
+    from selenium.webdriver.chrome.service import Service
+    from selenium import webdriver
+    from selenium.webdriver.support.ui import WebDriverWait
+    user_data_dir = "C:/Users/{0}/AppData/Local/Google/Chrome/User Data".format(username)
+    profile_directory = profile_directory
+    service = Service(executable_path='C:/latest_chrome_driver/chromedriver.exe')
+    options = webdriver.ChromeOptions()
+    options.add_argument(f"--user-data-dir={user_data_dir}")
+    options.add_argument(f"--profile-directory={profile_directory}")
+    options.add_argument("--no-sandbox")  # Add this
+    options.add_argument("--disable-dev-shm-usage")  # Add this
+    options.add_experimental_option("detach", True)
+    driver = webdriver.Chrome(service=service, options=options)
+    wait = WebDriverWait(driver, 10)
+    return driver
+
+def mobile_emulation_driver(self):
+    from selenium.webdriver.chrome.service import Service
+    from selenium import webdriver
+    from selenium.webdriver.support.ui import WebDriverWait
+
+    service = Service(executable_path='C://latest_chrome_driver//chromedriver.exe')
+    chrome_options = webdriver.ChromeOptions()
+    chrome_options.add_experimental_option("excludeSwitches", ['enable-automation'])
+    chrome_options.add_argument('--user-agent=Mozilla/5.0 (Linux; Android 13; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Mobile Safari/537.36')
+    chrome_options.add_argument("--window-size=200,1000")
+    chrome_options.page_load_strategy = 'eager'
+    chrome_options.add_argument('--ignore-ssl-errors')
+    chrome_options.add_argument('--disable-gpu')
+    chrome_options.add_argument('--ignore-certificate-errors')
+    chrome_options.add_argument("force-device-scale-factor=1.5")
+    driver = webdriver.Chrome(service=service, options=chrome_options)
+    return driver
+
 
 def createwebdriver(driver,crawler_type='osa',driver_type="chrome"):
 
@@ -352,5 +388,14 @@ def createwebdriver(driver,crawler_type='osa',driver_type="chrome"):
             driver = webdriver.Chrome(service=service, options=options)
             wait = WebDriverWait(driver,10)
             return driver
+        
+        elif driver_type=='profile':
+            driver=driver_initialisation_profile()
+            return driver
+        
+        elif driver_type=='mobile':
+            driver=mobile_emulation_driver()
+            return driver
+
 
                     
