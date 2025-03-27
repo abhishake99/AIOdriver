@@ -208,7 +208,7 @@ def driver_initialisation_profile(username='Administrator',profile_directory='De
     wait = WebDriverWait(driver, 10)
     return driver
 
-def mobile_emulation_driver(self):
+def mobile_emulation_driver():
     from selenium.webdriver.chrome.service import Service
     from selenium import webdriver
     from selenium.webdriver.support.ui import WebDriverWait
@@ -227,7 +227,7 @@ def mobile_emulation_driver(self):
     return driver
 
 
-def createwebdriver(driver,crawler_type='osa',driver_type="chrome"):
+def createwebdriver(driver,crawler_type='osa',driver_type="chrome",username='Administrator',profile_directory='Default'):
 
     if crawler_type=='bh' or crawler_type=='rr':
 
@@ -390,7 +390,7 @@ def createwebdriver(driver,crawler_type='osa',driver_type="chrome"):
             return driver
         
         elif driver_type=='profile':
-            driver=driver_initialisation_profile()
+            driver=driver_initialisation_profile(username=username,profile_directory=profile_directory)
             return driver
         
         elif driver_type=='mobile':
