@@ -32,7 +32,7 @@ driver = createwebdriver(driver, driver_type="edge")  # Edge driver creation
 
 ### Profile WebDriver Creation
 
-To create a Edge WebDriver:
+To create a Profile WebDriver:
 
 ```python
 from AIOdriver.functions import createwebdriver
@@ -42,7 +42,7 @@ driver = createwebdriver(driver, driver_type="profile",username='Administrator',
 
 ### Mobile WebDriver Creation
 
-To create a Edge WebDriver:
+To create a Mobile WebDriver:
 
 ```python
 from AIOdriver.functions import createwebdriver
