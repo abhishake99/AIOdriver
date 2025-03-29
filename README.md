@@ -16,16 +16,36 @@ To create a Chrome WebDriver:
 
 ```python
 from AIOdriver.functions import createwebdriver
-
 driver = ''
 driver = createwebdriver(driver, driver_type="chrome")  # Chrome driver creation
 ```
 
 ### Edge WebDriver Creation
+
 To create a Edge WebDriver:
 
 ```python
 from AIOdriver.functions import createwebdriver
 driver = ''
 driver = createwebdriver(driver, driver_type="edge")  # Edge driver creation
+```
+
+### Profile WebDriver Creation
+
+To create a Edge WebDriver:
+
+```python
+from AIOdriver.functions import createwebdriver
+driver = ''
+driver = createwebdriver(driver, driver_type="profile",username='Administrator',profile_directory='Default')  
+```
+
+### Mobile WebDriver Creation
+
+To create a Edge WebDriver:
+
+```python
+from AIOdriver.functions import createwebdriver
+driver = ''
+driver = createwebdriver(driver, driver_type="mobile")  
 ```
