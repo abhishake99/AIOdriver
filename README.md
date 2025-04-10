@@ -49,3 +49,13 @@ from AIOdriver.functions import createwebdriver
 driver = ''
 driver = createwebdriver(driver, driver_type="mobile")  
 ```
+
+### Selenium wire WebDriver Creation
+
+To create a Selenium wire WebDriver:
+
+```python
+from AIOdriver.functions import createwebdriver
+driver = ''
+driver = createwebdriver(driver, driver_type="chrome",crawler_type="bh")  
+```
