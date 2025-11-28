@@ -7,7 +7,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name='AIOdriver',
-    version='0.1.5',
+    version='0.1.6',
     author='Abhishek Ramawat',
     author_email='ramawatabhishek22@gmail.com',
     description='All in one driver',
@@ -18,7 +18,6 @@ setuptools.setup(
     },
     license='MIT',
     packages=['AIOdriver'],
-    packages=setuptools.find_packages(),
     python_requires=">=3.8",
     install_requires=[
         "selenium>=4.10.0",
